@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Харківський обласний клінічний центр соціально значущих хвороб</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        teal: {
+                            50: '#f0fdfa',
+                            100: '#ccfbf1',
+                            500: '#14b8a6',
+                            600: '#0d9488',
+                            700: '#0f766e',
+                            800: '#115e59',
+                            900: '#134e4a',
+                        },
+                        medical: {
+                            blue: '#0284c7',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .toast-enter {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+        .toast-enter-active {
+            transform: translateY(0);
+            opacity: 1;
+            transition: all 300ms ease-out;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans flex flex-col min-h-screen">
+
+    <!-- Top Emergency Bar -->
+    <div class="bg-teal-900 text-white text-sm py-2 px-4 shadow-inner">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-2">
+            <div class="flex items-center space-x-4 text-xs sm:text-sm">
+                <span class="flex items-center gap-1.5 font-medium text-teal-200">
+                    <i class="fa-solid fa-clock text-amber-400"></i> Приймальні відділення: 24/7
+                </span>
+                <span class="hidden md:inline text-teal-600">|</span>
+                <span class="hidden md:inline text-teal-100">м. Харків, Україна</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <a href="tel:+380577000000" class="flex items-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-full font-bold text-xs transition duration-200 shadow">
+                    <i class="fa-solid fa-phone-volume animate-pulse"></i> Гаряча лінія 24/7: +38 (057) 700-00-00
+                </a>
+                <button onclick="toggleModal('emergency-modal')" class="text-xs text-teal-200 hover:text-white underline">
+                    Усі екстрені номери
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Navigation Header -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Hospital Name -->
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 bg-teal-600 text-white rounded-xl flex items-center justify-center text-2xl font-bold shadow-md">
+                        <i class="fa-solid fa-hospital-user"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold leading-tight text-slate-900">
+                            Обласний клінічний центр
+                        </h1>
+                        <p class="text-xs sm:text-sm text-teal-700 font-medium">
+                            соціально значущих хвороб (м. Харків)
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Desktop Navigation Links -->
+                <nav class="hidden lg:flex space-x-6 text-sm font-medium text-slate-700">
+                    <a href="#hero" class="hover:text-teal-600 transition">Головна</a>
+                    <a href="#branches" class="hover:text-teal-600 transition">Філії та Структура</a>
+                    <a href="#departments" class="hover:text-teal-600 transition">Відділення & Номера</a>
+                    <a href="#contacts" class="hover:text-teal-600 transition">Контакти</a>
+                </nav>
+
+                <!-- CTA Button -->
+                <div class="hidden sm:flex items-center space-x-3">
+                    <button onclick="toggleModal('appointment-modal')" class="bg-teal-600 hover:bg-teal-700 text-white font-medium px-4 py-2.5 rounded-xl text-sm transition shadow-sm hover:shadow-md flex items-center gap-2">
+                        <i class="fa-regular fa-calendar-check"></i>
+                        Запис на прийом
+                    </button>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <div class="lg:hidden">
+                    <button onclick="toggleMobileMenu()" class="text-slate-600 hover:text-slate-900 p-2 text-xl focus:outline-none">
+                        <i class="fa-solid fa-bars" id="menu-icon"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden border-t border-slate-200 bg-white px-4 pt-2 pb-4 space-y-2">
+            <a href="#hero" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-teal-600">Головна</a>
+            <a href="#branches" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-teal-600">Філії та Структура</a>
+            <a href="#departments" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-teal-600">Відділення & Номера</a>
+            <a href="#contacts" onclick="toggleMobileMenu()" class="block py-2 text-slate-700 font-medium hover:text-teal-600">Контакти</a>
+            <button onclick="toggleMobileMenu(); toggleModal('appointment-modal')" class="w-full text-center bg-teal-600 text-white font-medium py-2.5 rounded-xl text-sm mt-2">
+                Запис на прийом
+            </button>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="relative bg-gradient-to-br from-teal-900 via-teal-800 to-slate-900 text-white py-16 lg:py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-12 gap-8 items-center">
+                <div class="md:col-span-7 space-y-6">
+                    <span class="inline-block bg-teal-700/60 border border-teal-500/30 text-teal-200 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Високоспеціалізована медична допомога
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white leading-tight">
+                        Харківський обласний клінічний центр соціально значущих хвороб
+                    </h2>
+                    <p class="text-teal-100 text-base sm:text-lg leading-relaxed max-w-2xl">
+                        Об'єднана медична мережа Харківщини, що забезпечує стаціонарну та амбулаторну допомогу при інфекційних, дерматовенерологічних захворюваннях, а також спеціалізований супровід та профілактику ВІЛ/СНІД.
+                    </p>
+                    <div class="flex flex-wrap gap-4 pt-2">
+                        <a href="#departments" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold px-6 py-3 rounded-xl transition flex items-center gap-2 shadow-lg">
+                            <i class="fa-solid fa-list-ul"></i> Пошук відділень та телефонів
+                        </a>
+                        <button onclick="toggleModal('emergency-modal')" class="bg-white/10 hover:bg-white/20 text-white font-medium border border-white/20 px-6 py-3 rounded-xl transition flex items-center gap-2">
+                            <i class="fa-solid fa-phone"></i> Терміновий зв'язок
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats Badge Box -->
+                <div class="md:col-span-5 bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/15 text-white space-y-4">
+                    <h3 class="text-lg font-bold border-b border-white/20 pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved text-teal-300"></i> Основна структура Центру
+                    </h3>
+                    <div class="space-y-3">
+                        <div class="flex items-start gap-3 bg-white/5 p-3 rounded-xl">
+                            <div class="p-2 bg-teal-500/20 text-teal-300 rounded-lg">
+                                <i class="fa-solid fa-bed-pulse text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm">Інфекційний стаціонар</h4>
+                                <p class="text-xs text-teal-200">Цілодобовий стаціонар, реанімація, діагностична лабораторія</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 bg-white/5 p-3 rounded-xl">
+                            <div class="p-2 bg-teal-500/20 text-teal-300 rounded-lg">
+                                <i class="fa-solid fa-ribbon text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm">Центр ВІЛ/СНІД</h4>
+                                <p class="text-xs text-teal-200">АРТ-терапія, консультації, диспансерний облік, профілактика</p>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3 bg-white/5 p-3 rounded-xl">
+                            <div class="p-2 bg-teal-500/20 text-teal-300 rounded-lg">
+                                <i class="fa-solid fa-user-doctor text-xl"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-sm">Дерматовенерологія</h4>
+                                <p class="text-xs text-teal-200">Поліклінічний прийом, дерматологічне відділення, ЗПСШ</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Branches / Structure Section -->
+    <section id="branches" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mb-3">Структура та Філії Центру</h2>
+                <p class="text-slate-600">Наш заклад об'єднує 3 ключові напрямки спеціалізованої медичної допомоги у місті Харків та області.</p>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Card 1: Infection Hospital -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="w-14 h-14 bg-teal-100 text-teal-700 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5">
+                            <i class="fa-solid fa-vial-virus"></i>
+                        </div>
+                        <span class="bg-teal-100 text-teal-800 text-xs font-semibold px-2.5 py-1 rounded-full uppercase">Основний стаціонар</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Інфекційний стаціонар</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Колишня Обласна інфекційна лікарня. Надає екстрену та планову допомогу дорослим та дітям при гострих інфекційних патологіях.
+                        </p>
+                        <ul class="text-xs text-slate-700 space-y-2 mb-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-teal-600"></i> Реконструктивні реанімаційні блоки</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-teal-600"></i> Дитячі та дорослі відділення</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-teal-600"></i> Сучасна клінічна лабораторія</li>
+                        </ul>
+                    </div>
+                    <div class="border-t border-slate-200 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-slate-500"><i class="fa-solid fa-location-dot"></i> м. Харків</span>
+                        <button onclick="filterBranch('infection')" class="text-teal-700 font-semibold hover:underline">Відділення філії &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- Card 2: HIV/AIDS Center -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="w-14 h-14 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5">
+                            <i class="fa-solid fa-ribbon"></i>
+                        </div>
+                        <span class="bg-red-100 text-red-800 text-xs font-semibold px-2.5 py-1 rounded-full uppercase">Консультативно-диспансерний</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Центр ВІЛ/СНІД</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Спеціалізований центр профілактики, діагностики та надання медичної допомоги пацієнтам із ВІЛ-інфекцією та соціально значущими хворобами.
+                        </p>
+                        <ul class="text-xs text-slate-700 space-y-2 mb-6">
+                            <li class="flex items-center gap-2"><li class="flex items-center gap-2"><i class="fa-solid fa-check text-red-600"></i> Безкоштовне забезпечення АРТ</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-red-600"></i> Психолого-соціальний супровід</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-red-600"></i> Анонімне та швидке тестування</li>
+                        </ul>
+                    </div>
+                    <div class="border-t border-slate-200 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-slate-500"><i class="fa-solid fa-location-dot"></i> м. Харків</span>
+                        <button onclick="filterBranch('aids')" class="text-teal-700 font-semibold hover:underline">Відділення філії &rarr;</button>
+                    </div>
+                </div>
+
+                <!-- Card 3: Dermatology Branch -->
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between hover:shadow-lg transition">
+                    <div>
+                        <div class="w-14 h-14 bg-sky-100 text-sky-600 rounded-2xl flex items-center justify-center text-2xl font-bold mb-5">
+                            <i class="fa-solid fa-allergies"></i>
+                        </div>
+                        <span class="bg-sky-100 text-sky-800 text-xs font-semibold px-2.5 py-1 rounded-full uppercase">Дерматологічна філія</span>
+                        <h3 class="text-xl font-bold text-slate-900 mt-3 mb-2">Дерматовенерологія</h3>
+                        <p class="text-sm text-slate-600 mb-4">
+                            Обласний дерматовенерологічний диспансер. Амбулаторний прийом та стаціонарне лікування шкірних патологій і ЗПСШ.
+                        </p>
+                        <ul class="text-xs text-slate-700 space-y-2 mb-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-sky-600"></i> Консультативна поліклініка</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-sky-600"></i> Дерматологічний стаціонар</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-check text-sky-600"></i> Лабораторна діагностика шкірних недуг</li>
+                        </ul>
+                    </div>
+                    <div class="border-t border-slate-200 pt-4 flex justify-between items-center text-xs">
+                        <span class="text-slate-500"><i class="fa-solid fa-location-dot"></i> м. Харків</span>
+                        <button onclick="filterBranch('derm')" class="text-teal-700 font-semibold hover:underline">Відділення філії &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Directory: Departments & Phones -->
+    <section id="departments" class="py-16 bg-slate-100 border-t border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Довідник відділень та телефонних номерів</h2>
+                    <p class="text-slate-600 text-sm mt-1">Знайдіть потрібне відділення, завідувача чи контактний телефон</p>
+                </div>
+                <!-- Search Box -->
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="search-input" onkeyup="filterDepartments()" placeholder="Пошук відділення або телефону..." class="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-sm"></i>
+                </div>
+            </div>
+
+            <!-- Branch Filter Tabs -->
+            <div class="flex flex-wrap gap-2 mb-8" id="filter-tabs">
+                <button onclick="filterBranch('all')" data-branch="all" class="filter-btn active-tab bg-teal-600 text-white font-medium px-4 py-2 rounded-xl text-sm transition shadow-sm">
+                    Всі філії та відділення
+                </button>
+                <button onclick="filterBranch('infection')" data-branch="infection" class="filter-btn bg-white hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl text-sm border border-slate-300 transition">
+                    Інфекційний стаціонар
+                </button>
+                <button onclick="filterBranch('aids')" data-branch="aids" class="filter-btn bg-white hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl text-sm border border-slate-300 transition">
+                    Центр ВІЛ/СНІД
+                </button>
+                <button onclick="filterBranch('derm')" data-branch="derm" class="filter-btn bg-white hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl text-sm border border-slate-300 transition">
+                    Дерматовенерологія
+                </button>
+            </div>
+
+            <!-- Department Cards Grid -->
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6" id="departments-grid">
+                
+                <!-- Item 1 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="infection" data-keywords="приймальне інфекційне цілодобово стаціонар черговий emergency">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md border border-teal-200">
+                                Інфекційний стаціонар
+                            </span>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2 py-0.5 rounded-full flex items-center gap-1">
+                                <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> 24/7
+                            </span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Приймальне відділення</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. відділення: Ковальова О. М.</p>
+                        <p class="text-sm text-slate-600 mb-4">Госпіталізація хворих на інфекційні патології, первинна діагностика та невідкладна огляд-сортування.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Прямий номер:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-01-01</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000101')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5" title="Скопіювати телефон">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="infection" data-keywords="реанімація інтенсивна терапія ваіт анестезіологія">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md border border-teal-200">
+                                Інфекційний стаціонар
+                            </span>
+                            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2 py-0.5 rounded-full">24/7</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Відділення Інтенсивної Терапії (ВІТ)</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. відділення: Бондаренко В. І.</p>
+                        <p class="text-sm text-slate-600 mb-4">Реанімаційний блок для важких інфекційних хворих із підтримкою ШВЛ та моніторингом життєдіяльності.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Ординаторська:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-01-02</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000102')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="infection" data-keywords="1 інфекційне доросле стаціонар повітряно-крапельні">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md border border-teal-200">
+                                Інфекційний стаціонар
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">№ 1 відділення</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">1-ше Інфекційне Відділення (Дорослі)</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. відділення: Шевченко С. П.</p>
+                        <p class="text-sm text-slate-600 mb-4">Лікування повітряно-крапельних інфекцій, гострих респіраторних патологій та ускладнень.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Пост:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-01-10</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000110')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="infection" data-keywords="дитяче інфекційне діти 2 відділення стаціонар">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md border border-teal-200">
+                                Інфекційний стаціонар
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">№ 2 (Дитяче)</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">2-ге Дитяче Інфекційне Відділення</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. відділення: Мельник О. В.</p>
+                        <p class="text-sm text-slate-600 mb-4">Спеціалізоване відділення для дітей з гострими інфекційними захворюваннями різного ступеня.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Ординаторська:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-01-20</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000120')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="aids" data-keywords="центр снід віл арт реєстратура профілактика довіра">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded-md border border-red-200">
+                                Центр ВІЛ/СНІД
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">Реєстратура</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Консультативно-диспансерне відділення</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Керівник: Сидоренко Т. М.</p>
+                        <p class="text-sm text-slate-600 mb-4">Облік, видача АРТ препаратів, конфіденційне консультування та моніторинг лікування.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Реєстратура ВІЛ-центру:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-02-01</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000201')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 6 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="aids" data-keywords="віл снід соціальний супровід психолог юрист гаряча лінія">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-red-50 text-red-700 text-xs font-bold px-2.5 py-1 rounded-md border border-red-200">
+                                Центр ВІЛ/СНІД
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">Психосоціальна служба</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Відділення психосоціальної підтримки</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Координатор: Василенко О. В.</p>
+                        <p class="text-sm text-slate-600 mb-4">Допомога соціальних працівників, психологічна адаптація, підтримка для пацієнтів та їх сімей.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Телефон довіри:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-02-05</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000205')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 7 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="derm" data-keywords="дерматологія поліклініка прийом шкірний диспансер запис">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-sky-50 text-sky-700 text-xs font-bold px-2.5 py-1 rounded-md border border-sky-200">
+                                Дерматовенерологія
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">Поліклініка</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Дерматовенерологічна Поліклініка</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. поліклініки: Ткаченко Н. Г.</p>
+                        <p class="text-sm text-slate-600 mb-4">Амбулаторний прийом лікарів-дерматологів, венерологів, дерматоскопія та профілактичні огляди.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Реєстратура:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-03-01</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000301')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 8 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="derm" data-keywords="дерматологічний стаціонар лікування шкіра дерматоз дерматит псоріаз">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-sky-50 text-sky-700 text-xs font-bold px-2.5 py-1 rounded-md border border-sky-200">
+                                Дерматовенерологія
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">Стаціонар</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Дерматологічне Стаціонарне Відділення</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-user-doctor text-slate-400 mr-1"></i> Зав. відділення: Кравченко І. В.</p>
+                        <p class="text-sm text-slate-600 mb-4">Цілодобове та денне стаціонарне лікування важких форм дерматозів, екземи, псоріазу тощо.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Ординаторська:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-03-10</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000310')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Item 9 -->
+                <div class="dept-card bg-white rounded-2xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition flex flex-col justify-between" data-branch="infection" data-keywords="лабораторія аналізи плр іфа аналіз крові діагностика">
+                    <div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="bg-teal-50 text-teal-700 text-xs font-bold px-2.5 py-1 rounded-md border border-teal-200">
+                                Лабораторний центр
+                            </span>
+                            <span class="bg-slate-100 text-slate-600 text-xs font-semibold px-2 py-0.5 rounded-full">Лабораторія</span>
+                        </div>
+                        <h3 class="text-lg font-bold text-slate-900 mb-1">Централізована Діагностична Лабораторія</h3>
+                        <p class="text-xs text-slate-500 mb-3"><i class="fa-solid fa-flask-vial text-slate-400 mr-1"></i> Зав. лабораторії: Мороз Л. А.</p>
+                        <p class="text-sm text-slate-600 mb-4">ПЛР-діагностика, ІФА, клінічні та біохімічні дослідження крові, імунологічні тести.</p>
+                    </div>
+                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 block">Довідкова лабораторії:</span>
+                            <span class="font-bold text-teal-800 text-sm phone-number">+38 (057) 700-04-00</span>
+                        </div>
+                        <button onclick="copyPhone('+380577000400')" class="bg-teal-50 hover:bg-teal-100 text-teal-700 p-2.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5">
+                            <i class="fa-regular fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Empty Search State -->
+            <div id="no-results" class="hidden text-center py-12 bg-white rounded-2xl border border-dashed border-slate-300 mt-6">
+                <i class="fa-solid fa-building-circle-xmark text-4xl text-slate-300 mb-3"></i>
+                <h3 class="text-lg font-bold text-slate-700">Відділень не знайдено</h3>
+                <p class="text-sm text-slate-500 max-w-md mx-auto mt-1">Спробуйте змінити фільтр або ввести інший пошуковий запит (наприклад, "реанімація" або "дитяче").</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map & Contacts Section -->
+    <section id="contacts" class="py-16 bg-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-12 gap-8 items-start">
+                
+                <div class="md:col-span-5 space-y-6">
+                    <div>
+                        <span class="text-xs font-bold text-teal-600 uppercase tracking-wider">Локація та зв'язок</span>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Контактна інформація</h2>
+                    </div>
+
+                    <div class="space-y-4 text-sm">
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="p-3 bg-teal-600 text-white rounded-xl">
+                                <i class="fa-solid fa-location-dot text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Юридична адреса</h4>
+                                <p class="text-slate-600">м. Харків, Україна</p>
+                                <p class="text-xs text-slate-400 mt-1">Офіційні графіки прийому громадян: Пн-Пт: 08:00 - 16:30</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="p-3 bg-teal-600 text-white rounded-xl">
+                                <i class="fa-solid fa-phone text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Головна канцелярія & Секретаріат</h4>
+                                <p class="text-slate-600 font-semibold">+38 (057) 700-00-01</p>
+                                <p class="text-slate-600 font-semibold">+38 (057) 700-00-02</p>
+                            </div>
+                        </div>
+
+                        <div class="flex items-start gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200">
+                            <div class="p-3 bg-teal-600 text-white rounded-xl">
+                                <i class="fa-solid fa-envelope text-lg"></i>
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-slate-900">Електронна пошта</h4>
+                                <p class="text-slate-600">info@medical-center.kharkiv.ua</p>
+                                <p class="text-xs text-slate-400 mt-1">Для офіційних звернень та запитів</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Banner Card -->
+                <div class="md:col-span-7 bg-gradient-to-br from-slate-900 to-teal-950 text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between min-h-[380px]">
+                    <div>
+                        <span class="bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs px-3 py-1 rounded-full font-medium inline-block mb-4">
+                            Важлива інформація пацієнтам
+                        </span>
+                        <h3 class="text-2xl font-bold mb-3">Порядок звернення під час воєнного стану</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                            Приймальні відділення інфекційного стаціонару працюють у **цілодобовому режимі 24/7**. Для звернення до ВІЛ-центру або Дерматовенерологічної поліклініки рекомендуємо попередньо зателефонувати в реєстратуру або скористатися кнопкою онлайн-запису.
+                        </p>
+                        <ul class="text-xs text-teal-200 space-y-2 mb-6">
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-teal-400"></i> Усі екстрені медичні послуги надаються безоплатно</li>
+                            <li class="flex items-center gap-2"><i class="fa-solid fa-circle-check text-teal-400"></i> Захищені укриття на території закладу</li>
+                        </ul>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-4 pt-4 border-t border-white/10">
+                        <button onclick="toggleModal('appointment-modal')" class="bg-teal-500 hover:bg-teal-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition">
+                            Записатися на прийом онлайн
+                        </button>
+                        <button onclick="toggleModal('emergency-modal')" class="text-white hover:text-teal-200 text-sm font-medium underline">
+                            Телефони гарячих ліній
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-10 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6 border-b border-slate-800 pb-8">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-teal-600 text-white rounded-lg flex items-center justify-center text-xl font-bold">
+                        <i class="fa-solid fa-hospital-user"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-white font-bold text-sm">Харківський обласний клінічний центр</h4>
+                        <p class="text-xs text-slate-400">соціально значущих хвороб</p>
+                    </div>
+                </div>
+                <div class="flex space-x-6 text-sm">
+                    <a href="#hero" class="hover:text-white transition">Головна</a>
+                    <a href="#branches" class="hover:text-white transition">Філії</a>
+                    <a href="#departments" class="hover:text-white transition">Відділення</a>
+                    <a href="#contacts" class="hover:text-white transition">Контакти</a>
+                </div>
+            </div>
+            <div class="pt-6 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500 gap-2">
+                <p>&copy; 2026 КНП ХОР "Обласний клінічний центр соціально значущих хвороб". Всі права захищені.</p>
+                <p>Офіційний інформаційний веб-шаблон</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Emergency Modal -->
+    <div id="emergency-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative">
+            <button onclick="toggleModal('emergency-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="flex items-center gap-3 mb-4">
+                <div class="w-12 h-12 bg-red-100 text-red-600 rounded-2xl flex items-center justify-center text-xl">
+                    <i class="fa-solid fa-phone-volume"></i>
+                </div>
+                <div>
+                    <h3 class="text-xl font-bold text-slate-900">Екстрені телефони 24/7</h3>
+                    <p class="text-xs text-slate-500">Цілодобова чергова служба Центру</p>
+                </div>
+            </div>
+
+            <div class="space-y-3 my-6">
+                <div class="p-3 bg-red-50 border border-red-100 rounded-xl flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-red-700 font-semibold block">Гаряча лінія стаціонару</span>
+                        <span class="text-base font-bold text-slate-900">+38 (057) 700-00-00</span>
+                    </div>
+                    <a href="tel:+380577000000" class="bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-red-700">Викликати</a>
+                </div>
+
+                <div class="p-3 bg-teal-50 border border-teal-100 rounded-xl flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-teal-800 font-semibold block">Приймальне відділення інфекційного стаціонару</span>
+                        <span class="text-base font-bold text-slate-900">+38 (057) 700-01-01</span>
+                    </div>
+                    <a href="tel:+380577000101" class="bg-teal-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-teal-700">Дзвінок</a>
+                </div>
+
+                <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-600 font-semibold block">Черговий лікар ВІЛ-Центру</span>
+                        <span class="text-base font-bold text-slate-900">+38 (057) 700-02-01</span>
+                    </div>
+                    <a href="tel:+380577000201" class="bg-slate-800 text-white px-3 py-1.5 rounded-lg text-xs font-bold hover:bg-slate-900">Дзвінок</a>
+                </div>
+            </div>
+
+            <button onclick="toggleModal('emergency-modal')" class="w-full bg-slate-100 text-slate-700 font-medium py-2.5 rounded-xl text-sm hover:bg-slate-200">
+                Закрити
+            </button>
+        </div>
+    </div>
+
+    <!-- Appointment Modal -->
+    <div id="appointment-modal" class="hidden fixed inset-0 z-50 bg-slate-950/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-slate-100 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="toggleModal('appointment-modal')" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div class="mb-6">
+                <h3 class="text-xl font-bold text-slate-900">Запис на прийом / Консультацію</h3>
+                <p class="text-xs text-slate-500 mt-1">Оберіть філію та заповніть контактні дані</p>
+            </div>
+
+            <form onsubmit="handleAppointmentSubmit(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">ПІБ Пацієнта *</label>
+                    <input type="text" required placeholder="Іванов Іван Іванович" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Номер телефону *</label>
+                    <input type="tel" required placeholder="+380 (50) 000-00-00" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Оберіть Філію / Напрямок *</label>
+                    <select required class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                        <option value="">-- Оберіть підрозділ --</option>
+                        <option value="inf">Інфекційний стаціонар / Поліклініка</option>
+                        <option value="aids">Центр ВІЛ/СНІД (Консультація)</option>
+                        <option value="derm">Дерматовенерологічний філіал</option>
+                        <option value="lab">Лабораторна діагностика</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Бажана дата консультації</label>
+                    <input type="date" class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-semibold text-slate-700 mb-1">Короткий коментар або причина звернення</label>
+                    <textarea rows="3" placeholder="Опишіть ваше запитання..." class="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-teal-500"></textarea>
+                </div>
+
+                <div class="pt-2">
+                    <button type="submit" class="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 rounded-xl text-sm transition shadow-md">
+                        Підтвердити запис
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="fixed bottom-5 right-5 z-50 bg-slate-900 text-white px-4 py-3 rounded-xl shadow-xl flex items-center gap-3 hidden transition-all duration-300 border border-slate-700">
+        <i class="fa-solid fa-circle-check text-emerald-400" id="toast-icon"></i>
+        <span class="text-xs font-medium" id="toast-message">Повідомлення</span>
+    </div>
+
+    <!-- Interactive JavaScript Logic -->
+    <script>
+        // Toggle mobile menu visibility
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Toggle Modals
+        function toggleModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.toggle('hidden');
+        }
+
+        // Copy Phone Number to Clipboard
+        function copyPhone(phoneNumber) {
+            const tempInput = document.createElement('input');
+            tempInput.value = phoneNumber;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            showToast(`Номер ${phoneNumber} скопійовано!`);
+        }
+
+        // Toast Notification System
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            toastMsg.innerText = message;
+
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 3000);
+        }
+
+        // Branch Filter Logic
+        function filterBranch(branchName) {
+            const cards = document.querySelectorAll('.dept-card');
+            const buttons = document.querySelectorAll('.filter-btn');
+            let visibleCount = 0;
+
+            // Update Active Tab Styling
+            buttons.forEach(btn => {
+                if (btn.getAttribute('data-branch') === branchName) {
+                    btn.className = "filter-btn active-tab bg-teal-600 text-white font-medium px-4 py-2 rounded-xl text-sm transition shadow-sm";
+                } else {
+                    btn.className = "filter-btn bg-white hover:bg-slate-200 text-slate-700 font-medium px-4 py-2 rounded-xl text-sm border border-slate-300 transition";
+                }
+            });
+
+            // Filter Cards
+            cards.forEach(card => {
+                const cardBranch = card.getAttribute('data-branch');
+                if (branchName === 'all' || cardBranch === branchName) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            checkEmptyResults(visibleCount);
+        }
+
+        // Search Filter Logic
+        function filterDepartments() {
+            const query = document.getElementById('search-input').value.toLowerCase().trim();
+            const cards = document.querySelectorAll('.dept-card');
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const textContent = card.innerText.toLowerCase();
+                const keywords = card.getAttribute('data-keywords').toLowerCase();
+                
+                if (textContent.includes(query) || keywords.includes(query)) {
+                    card.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            checkEmptyResults(visibleCount);
+        }
+
+        function checkEmptyResults(count) {
+            const noResults = document.getElementById('no-results');
+            if (count === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        // Form Submit Simulation
+        function handleAppointmentSubmit(event) {
+            event.preventDefault();
+            toggleModal('appointment-modal');
+            showToast('Ваша заявка успішно прийнята! Очікуйте дзвінка.');
+        }
+    </script>
+</body>
+</html>
